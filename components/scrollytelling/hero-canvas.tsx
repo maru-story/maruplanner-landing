@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ArrowRight, ChevronDown, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -12,69 +12,67 @@ if (typeof window !== "undefined") {
 
 const TOTAL_FRAMES = 120;
 
+// Persistent module-level cache so images remain cached across renders and hot-reloads
+const imageCache: (HTMLImageElement | null)[] = new Array(TOTAL_FRAMES).fill(null);
+
 export default function HeroCanvas() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const imagesRef = useRef<HTMLImageElement[]>([]);
+  const currentFrameRef = useRef<number>(1);
+  const lastDrawnFrameRef = useRef<number>(1);
+
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [loadProgress, setLoadProgress] = useState(0);
 
-  // Preload frames
-  useEffect(() => {
-    let loadedCount = 0;
-    const images: HTMLImageElement[] = [];
-
-    for (let i = 1; i <= TOTAL_FRAMES; i++) {
-      const img = new Image();
-      const paddedIndex = String(i).padStart(3, "0");
-      img.src = `/frames/frame_${paddedIndex}.webp`;
-
-      img.onload = () => {
-        loadedCount++;
-        setLoadProgress(Math.round((loadedCount / TOTAL_FRAMES) * 100));
-
-        // Draw first frame immediately as soon as it arrives
-        if (i === 1 && canvasRef.current) {
-          drawFrame(1);
-        }
-
-        if (loadedCount === TOTAL_FRAMES) {
-          setImagesLoaded(true);
-        }
-      };
-
-      images.push(img);
+  /**
+   * Safe Frame Retrieval with Nearest-Loaded Fallback
+   * Guarantees canvas NEVER receives a null or non-decoded frame, eliminating blank flashes.
+   */
+  const getLoadedFrame = (targetIndex: number): HTMLImageElement | null => {
+    // 1. Direct target match
+    const exact = imageCache[targetIndex - 1];
+    if (exact && exact.complete && exact.naturalWidth > 0) {
+      return exact;
     }
 
-    imagesRef.current = images;
+    // 2. Search backwards (most natural for scrub forward)
+    for (let i = targetIndex - 1; i >= 1; i--) {
+      const candidate = imageCache[i - 1];
+      if (candidate && candidate.complete && candidate.naturalWidth > 0) {
+        return candidate;
+      }
+    }
 
-    return () => {
-      imagesRef.current = [];
-    };
-  }, []);
+    // 3. Search forwards (if scrolling backwards before earlier frames load)
+    for (let i = targetIndex + 1; i <= TOTAL_FRAMES; i++) {
+      const candidate = imageCache[i - 1];
+      if (candidate && candidate.complete && candidate.naturalWidth > 0) {
+        return candidate;
+      }
+    }
 
-  const drawFrame = (frameIndex: number) => {
+    return null;
+  };
+
+  /**
+   * Draw specific frame to canvas
+   * Draws opaque image directly to overwrite previous buffer without clearRect to prevent flickering.
+   */
+  const drawFrame = useCallback((frameIndex: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const img = imagesRef.current[frameIndex - 1];
-    if (!img || !img.complete) return;
+    const img = getLoadedFrame(frameIndex);
+    if (!img) return;
 
-    const dpr = window.devicePixelRatio || 1;
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
+    const width = canvas.width;
+    const height = canvas.height;
+    if (width <= 0 || height <= 0) return;
 
-    if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-    }
-
-    ctx.save();
-    ctx.scale(dpr, dpr);
-
-    // Object-fit: cover calculation
+    // Cover scale calculation
     const imgRatio = img.naturalWidth / img.naturalHeight;
     const canvasRatio = width / height;
 
@@ -91,23 +89,132 @@ export default function HeroCanvas() {
       offsetX = (width - drawWidth) / 2;
     }
 
-    ctx.clearRect(0, 0, width, height);
+    // Paint image directly over previous pixels (no clearRect flash)
     ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
-    ctx.restore();
-  };
+    lastDrawnFrameRef.current = frameIndex;
+  }, []);
 
-  // Setup GSAP ScrollTrigger
+  /**
+   * Keep canvas internal buffer resolution synchronized with container dimensions
+   */
+  const syncDimensions = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.getBoundingClientRect();
+    const targetWidth = Math.round(rect.width * dpr);
+    const targetHeight = Math.round(rect.height * dpr);
+
+    if (targetWidth <= 0 || targetHeight <= 0) return;
+
+    if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+    }
+
+    // Repaint active frame immediately after dimension adjustment
+    drawFrame(currentFrameRef.current);
+  }, [drawFrame]);
+
+  // Synchronize canvas size on mount, resize, and layout changes
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    syncDimensions();
+
+    const ro = new ResizeObserver(() => {
+      syncDimensions();
+    });
+
+    ro.observe(container);
+    window.addEventListener("resize", syncDimensions);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", syncDimensions);
+    };
+  }, [syncDimensions]);
+
+  // Progressive frame loader
+  useEffect(() => {
+    let isMounted = true;
+
+    const checkCompletion = () => {
+      if (!isMounted) return;
+      let completed = 0;
+      for (let i = 0; i < TOTAL_FRAMES; i++) {
+        const img = imageCache[i];
+        if (img && img.complete && img.naturalWidth > 0) {
+          completed++;
+        }
+      }
+      const percent = Math.round((completed / TOTAL_FRAMES) * 100);
+      setLoadProgress(percent);
+      if (completed >= TOTAL_FRAMES) {
+        setImagesLoaded(true);
+      }
+    };
+
+    const loadSingleFrame = (frameNum: number) => {
+      if (imageCache[frameNum - 1]) {
+        const existing = imageCache[frameNum - 1]!;
+        if (existing.complete && existing.naturalWidth > 0) {
+          if (frameNum === 1 || frameNum === currentFrameRef.current) {
+            drawFrame(currentFrameRef.current);
+          }
+        }
+        return;
+      }
+
+      const img = new Image();
+      const padded = String(frameNum).padStart(3, "0");
+      img.src = `/frames/frame_${padded}.webp`;
+
+      img.onload = () => {
+        checkCompletion();
+        // If this newly loaded frame is currently the active or adjacent frame, render it immediately
+        if (
+          frameNum === 1 ||
+          Math.abs(frameNum - currentFrameRef.current) <= 1
+        ) {
+          drawFrame(currentFrameRef.current);
+        }
+      };
+
+      img.onerror = () => {
+        checkCompletion();
+      };
+
+      imageCache[frameNum - 1] = img;
+    };
+
+    // Load Frame 1 with top priority
+    loadSingleFrame(1);
+
+    // Preload remaining frames
+    for (let i = 2; i <= TOTAL_FRAMES; i++) {
+      loadSingleFrame(i);
+    }
+
+    checkCompletion();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [drawFrame]);
+
+  // Setup GSAP ScrollTrigger timeline (mounted ONCE for absolute scroll stability)
   useGSAP(
     () => {
       if (!containerRef.current || !canvasRef.current) return;
-
-      const frameObj = { frame: 1 };
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=3000",
+          end: "+=2600",
           pin: true,
           scrub: 0.5,
           anticipatePin: 1,
@@ -116,60 +223,48 @@ export default function HeroCanvas() {
               TOTAL_FRAMES,
               Math.max(1, Math.round(self.progress * (TOTAL_FRAMES - 1) + 1))
             );
+            currentFrameRef.current = frame;
             drawFrame(frame);
           },
         },
       });
 
-      // Synchronized text fades across scroll timeline
+      // Synchronized text animations across scroll phases
       tl.to(
         "#phase-1",
-        { opacity: 0, y: -40, duration: 0.15, ease: "power1.out" },
+        { opacity: 0, y: -30, duration: 0.15, ease: "power1.out" },
         0.15
       )
         .fromTo(
           "#phase-2",
-          { opacity: 0, y: 40 },
+          { opacity: 0, y: 30 },
           { opacity: 1, y: 0, duration: 0.2, ease: "power1.out" },
           0.25
         )
         .to(
           "#phase-2",
-          { opacity: 0, y: -40, duration: 0.15, ease: "power1.in" },
-          0.48
+          { opacity: 0, y: -30, duration: 0.15, ease: "power1.in" },
+          0.45
         )
         .fromTo(
           "#phase-3",
-          { opacity: 0, y: 40 },
+          { opacity: 0, y: 30 },
           { opacity: 1, y: 0, duration: 0.2, ease: "power1.out" },
-          0.55
+          0.52
         )
         .to(
           "#phase-3",
-          { opacity: 0, y: -40, duration: 0.15, ease: "power1.in" },
-          0.75
+          { opacity: 0, y: -30, duration: 0.15, ease: "power1.in" },
+          0.72
         )
         .fromTo(
           "#phase-4",
-          { opacity: 0, y: 40 },
+          { opacity: 0, y: 30 },
           { opacity: 1, y: 0, duration: 0.2, ease: "power1.out" },
-          0.82
+          0.80
         );
-
-      // Handle window resize
-      const handleResize = () => {
-        const currentProgress =
-          ScrollTrigger.getById("hero-scroll")?.progress || 0;
-        const currentFrame = Math.round(
-          currentProgress * (TOTAL_FRAMES - 1) + 1
-        );
-        drawFrame(currentFrame);
-      };
-
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
     },
-    { scope: containerRef, dependencies: [imagesLoaded] }
+    { scope: containerRef, dependencies: [] }
   );
 
   return (
@@ -180,15 +275,15 @@ export default function HeroCanvas() {
       {/* HTML5 2D Canvas */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full object-cover z-0"
+        className="absolute inset-0 w-full h-full object-cover z-0 block"
       />
 
-      {/* Subtle vignettes for readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-cream/90 via-transparent to-cream/60 pointer-events-none z-10" />
+      {/* Subtle vignettes for readability while preserving video brilliance */}
+      <div className="absolute inset-0 bg-gradient-to-t from-cream/60 via-transparent to-cream/40 pointer-events-none z-10" />
 
-      {/* Loading Progress Indicator */}
+      {/* Loading Progress Indicator (Only visible until preloading finishes) */}
       {!imagesLoaded && (
-        <div className="absolute top-24 left-1/2 -translate-x-1/2 z-30 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full border border-copper/20 shadow-sm text-xs text-charcoal flex items-center gap-2">
+        <div className="absolute top-24 left-1/2 -translate-x-1/2 z-30 bg-white/85 backdrop-blur-md px-4 py-2 rounded-full border border-copper/20 shadow-xs text-xs text-charcoal flex items-center gap-2 transition-opacity">
           <div className="w-2 h-2 rounded-full bg-copper animate-ping" />
           <span>Memuat visual interaktif ({loadProgress}%)</span>
         </div>
@@ -201,7 +296,7 @@ export default function HeroCanvas() {
           id="phase-1"
           className="my-auto max-w-2xl text-left pointer-events-auto transition-opacity"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-copper/30 text-copper text-xs font-medium mb-6 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/85 backdrop-blur-md border border-copper/30 text-copper text-xs font-medium mb-6 shadow-xs">
             <Sparkles className="w-3.5 h-3.5 text-copper" />
             <span>Digital Wedding SaaS & Hospitality Platform</span>
           </div>
@@ -232,7 +327,7 @@ export default function HeroCanvas() {
               href="https://maruplanner.my.id/ama-jidengg?to=tria"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white/90 hover:bg-white text-charcoal border border-charcoal/15 font-medium text-sm transition-all shadow-sm hover:shadow-md"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white/90 hover:bg-white text-charcoal border border-charcoal/15 font-medium text-sm transition-all shadow-xs hover:shadow-sm"
             >
               <span>Lihat Contoh Undangan</span>
               <ArrowRight className="w-4 h-4 text-copper" />
@@ -245,7 +340,7 @@ export default function HeroCanvas() {
           </div>
         </div>
 
-        {/* Phase 2: Unfolding (25% - 48%) */}
+        {/* Phase 2: Unfolding (25% - 45%) */}
         <div
           id="phase-2"
           className="absolute inset-x-6 top-1/2 -translate-y-1/2 max-w-xl mx-auto text-center pointer-events-auto opacity-0"
@@ -253,14 +348,14 @@ export default function HeroCanvas() {
           <h2 className="text-3xl md:text-5xl font-heading font-medium text-charcoal leading-tight mb-4">
             Beralih dari Kerumitan Kertas ke Keindahan Digital
           </h2>
-          <p className="text-sm md:text-base text-charcoal/80 leading-relaxed bg-white/70 backdrop-blur-md p-5 rounded-2xl border border-charcoal/10 shadow-xs">
+          <p className="text-sm md:text-base text-charcoal/80 leading-relaxed bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-charcoal/10 shadow-xs">
             Tinggalkan proses cetak yang mahal dan rekap tamu manual yang rentan
             hilang. Hadirkan pengalaman yang hangat, mewah, dan praktis bagi
             setiap tamu undangan Anda.
           </p>
         </div>
 
-        {/* Phase 3: The Digital Invitation (52% - 75%) */}
+        {/* Phase 3: The Digital Invitation (52% - 72%) */}
         <div
           id="phase-3"
           className="absolute inset-x-6 top-1/2 -translate-y-1/2 max-w-xl mx-auto text-center pointer-events-auto opacity-0"
@@ -268,14 +363,14 @@ export default function HeroCanvas() {
           <h2 className="text-3xl md:text-5xl font-heading font-medium text-charcoal leading-tight mb-4">
             Undangan Eksklusif Atas Nama Masing-Masing Tamu
           </h2>
-          <p className="text-sm md:text-base text-charcoal/80 leading-relaxed bg-white/70 backdrop-blur-md p-5 rounded-2xl border border-charcoal/10 shadow-xs">
+          <p className="text-sm md:text-base text-charcoal/80 leading-relaxed bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-charcoal/10 shadow-xs">
             15 section modular: galeri foto, musik latar, hitung mundur, peta
             lokasi interaktif, amplop digital, dan ucapan doa yang terhubung
             langsung dalam genggaman.
           </p>
         </div>
 
-        {/* Phase 4: QR Check-in & CTA (78% - 100%) */}
+        {/* Phase 4: QR Check-in & CTA (80% - 100%) */}
         <div
           id="phase-4"
           className="absolute inset-x-6 top-1/2 -translate-y-1/2 max-w-xl mx-auto text-center pointer-events-auto opacity-0"
@@ -283,7 +378,7 @@ export default function HeroCanvas() {
           <h2 className="text-3xl md:text-5xl font-heading font-medium text-charcoal leading-tight mb-4">
             QR Check-In 20fps & Kontrol Tamu Real-Time
           </h2>
-          <p className="text-sm md:text-base text-charcoal/80 leading-relaxed mb-6 bg-white/70 backdrop-blur-md p-5 rounded-2xl border border-charcoal/10 shadow-xs">
+          <p className="text-sm md:text-base text-charcoal/80 leading-relaxed mb-6 bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-charcoal/10 shadow-xs">
             Tamu cukup menunjukkan QR Code di layar ponsel. Meja penerima tamu
             memindai secepat kilat dengan PWA offline-first tanpa takut sinyal
             hilang di dalam gedung.
@@ -294,7 +389,7 @@ export default function HeroCanvas() {
               href="https://wa.me/6287825515689?text=Halo%20Maru%20Planner,%20saya%20ingin%20jadwalkan%20konsultasi%20untuk%20acara%20pernikahan"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-copper hover:bg-copper-dark text-white font-medium text-sm transition-all shadow-md"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-copper hover:bg-copper-dark text-white font-medium text-sm transition-all shadow-md hover:shadow-lg"
             >
               <MessageCircle className="w-4 h-4" />
               <span>Jadwalkan Konsultasi</span>
@@ -304,7 +399,7 @@ export default function HeroCanvas() {
               href="https://maruplanner.my.id/ama-jidengg?to=tria"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white hover:bg-cream text-charcoal border border-charcoal/20 font-medium text-sm transition-all"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white hover:bg-cream text-charcoal border border-charcoal/20 font-medium text-sm transition-all shadow-xs"
             >
               <span>Buka Demo Undangan</span>
               <ArrowRight className="w-4 h-4 text-copper" />
