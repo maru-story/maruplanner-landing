@@ -9,7 +9,7 @@ export default function PainPoints() {
         "Tamu menumpuk lama karena pencatatan manual di buku tamu atau scanner online yang gagal memuat akibat sinyal venue yang buruk.",
       solution: "Check-in 20fps Offline-First",
       solutionDesc:
-        "Scanner PWA dengan akselerasi Apple Neural Engine. Memindai dalam hitungan milidetik dan tetap bekerja normal tanpa koneksi internet.",
+        "Scanner PWA dengan akselerasi hardware. Memindai dalam hitungan milidetik dan tetap bekerja normal tanpa koneksi internet.",
       icon: QrCode,
     },
     {
@@ -35,16 +35,13 @@ export default function PainPoints() {
   return (
     <section id="solusi" className="py-24 bg-white border-y border-charcoal/10 relative">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-semibold uppercase tracking-widest text-copper mb-3 block">
-            Masalah Nyata di Lapangan
-          </span>
+        <div className="max-w-2xl mx-auto text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-heading font-medium text-charcoal leading-tight mb-4">
             Mengapa Pernikahan Modern Membutuhkan Sistem yang Matang?
           </h2>
-          <p className="text-sm md:text-base text-charcoal/70 leading-relaxed">
+          <p className="text-base text-charcoal/80 leading-relaxed max-w-xl mx-auto">
             Hari bahagia Anda tidak boleh dirusak oleh antrean tamu yang resah
-            atau data katering yang salah hitung.
+            atau data katering yang salah hitung di lapangan.
           </p>
         </div>
 
@@ -54,37 +51,37 @@ export default function PainPoints() {
             return (
               <div
                 key={idx}
-                className="bg-cream/40 rounded-3xl p-8 border border-charcoal/10 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden group"
+                className="bg-[#faf8f2] rounded-3xl p-8 border border-charcoal/10 flex flex-col justify-between hover:border-copper/40 transition-colors"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-copper mb-6 shadow-xs border border-charcoal/5 group-hover:scale-105 transition-transform">
+                  <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-copper mb-6 border border-charcoal/10 shadow-xs">
                     <Icon className="w-6 h-6" />
                   </div>
 
-                  {/* Problem Callout */}
+                  {/* Problem Statement */}
                   <div className="mb-6 pb-6 border-b border-charcoal/10">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-rose-700/80 mb-2">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <div className="flex items-center gap-1.5 text-xs font-semibold text-rose-800 mb-2">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
                       <span>Masalah Biasa</span>
                     </div>
                     <h3 className="font-heading font-medium text-lg text-charcoal mb-2">
                       {item.problem}
                     </h3>
-                    <p className="text-xs md:text-sm text-charcoal/70 leading-relaxed">
+                    <p className="text-sm text-charcoal/80 leading-relaxed">
                       {item.problemDesc}
                     </p>
                   </div>
 
-                  {/* Solution Callout */}
+                  {/* Solution Statement */}
                   <div>
-                    <div className="flex items-center gap-2 text-xs font-semibold text-emerald-700 mb-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                      <span>Solusi Maru Planner</span>
+                    <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-800 mb-2">
+                      <CheckCircle2 className="w-4 h-4 shrink-0" />
+                      <span>Standar Maru Planner</span>
                     </div>
-                    <h4 className="font-heading font-medium text-base text-charcoal mb-2">
+                    <h3 className="font-heading font-medium text-base text-charcoal mb-2">
                       {item.solution}
-                    </h4>
-                    <p className="text-xs md:text-sm text-charcoal-light leading-relaxed">
+                    </h3>
+                    <p className="text-sm text-charcoal/80 leading-relaxed">
                       {item.solutionDesc}
                     </p>
                   </div>

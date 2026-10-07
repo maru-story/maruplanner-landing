@@ -211,7 +211,7 @@ export default function HeroCanvas() {
             <span className="italic text-copper">Sempurna di Hari-H.</span>
           </h1>
 
-          <p className="text-base md:text-lg text-charcoal-light font-normal leading-relaxed mb-8 max-w-lg">
+          <p className="text-base md:text-lg text-charcoal font-medium leading-relaxed mb-8 max-w-lg bg-white/85 backdrop-blur-md p-4 rounded-2xl border border-charcoal/10 shadow-xs">
             Satu platform terintegrasi untuk undangan digital eksklusif, sebar
             WhatsApp personal, hingga QR Code check-in 20fps anti-antrean di meja
             resepsi.
@@ -240,8 +240,8 @@ export default function HeroCanvas() {
           </div>
 
           <div className="mt-12 flex items-center gap-2 text-xs text-charcoal/60">
-            <ChevronDown className="w-4 h-4 animate-bounce text-copper" />
-            <span>Gulir ke bawah untuk melihat transformasi</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-copper inline-block" />
+            <span>Gulir perlahan untuk melihat transformasi</span>
           </div>
         </div>
 
@@ -250,13 +250,10 @@ export default function HeroCanvas() {
           id="phase-2"
           className="absolute inset-x-6 top-1/2 -translate-y-1/2 max-w-xl mx-auto text-center pointer-events-auto opacity-0"
         >
-          <span className="text-xs font-semibold uppercase tracking-widest text-copper mb-3 block">
-            The Evolution
-          </span>
           <h2 className="text-3xl md:text-5xl font-heading font-medium text-charcoal leading-tight mb-4">
             Beralih dari Kerumitan Kertas ke Keindahan Digital
           </h2>
-          <p className="text-sm md:text-base text-charcoal/80 leading-relaxed bg-white/60 backdrop-blur-sm p-4 rounded-2xl border border-charcoal/10 shadow-sm">
+          <p className="text-sm md:text-base text-charcoal/80 leading-relaxed bg-white/70 backdrop-blur-md p-5 rounded-2xl border border-charcoal/10 shadow-xs">
             Tinggalkan proses cetak yang mahal dan rekap tamu manual yang rentan
             hilang. Hadirkan pengalaman yang hangat, mewah, dan praktis bagi
             setiap tamu undangan Anda.
@@ -268,13 +265,10 @@ export default function HeroCanvas() {
           id="phase-3"
           className="absolute inset-x-6 top-1/2 -translate-y-1/2 max-w-xl mx-auto text-center pointer-events-auto opacity-0"
         >
-          <span className="text-xs font-semibold uppercase tracking-widest text-copper mb-3 block">
-            Personal & Sinematik
-          </span>
           <h2 className="text-3xl md:text-5xl font-heading font-medium text-charcoal leading-tight mb-4">
             Undangan Eksklusif Atas Nama Masing-Masing Tamu
           </h2>
-          <p className="text-sm md:text-base text-charcoal/80 leading-relaxed bg-white/60 backdrop-blur-sm p-4 rounded-2xl border border-charcoal/10 shadow-sm">
+          <p className="text-sm md:text-base text-charcoal/80 leading-relaxed bg-white/70 backdrop-blur-md p-5 rounded-2xl border border-charcoal/10 shadow-xs">
             15 section modular: galeri foto, musik latar, hitung mundur, peta
             lokasi interaktif, amplop digital, dan ucapan doa yang terhubung
             langsung dalam genggaman.
@@ -286,13 +280,10 @@ export default function HeroCanvas() {
           id="phase-4"
           className="absolute inset-x-6 top-1/2 -translate-y-1/2 max-w-xl mx-auto text-center pointer-events-auto opacity-0"
         >
-          <span className="text-xs font-semibold uppercase tracking-widest text-copper mb-3 block">
-            Kepastian di Hari-H
-          </span>
           <h2 className="text-3xl md:text-5xl font-heading font-medium text-charcoal leading-tight mb-4">
             QR Check-In 20fps & Kontrol Tamu Real-Time
           </h2>
-          <p className="text-sm md:text-base text-charcoal/80 leading-relaxed mb-6 bg-white/60 backdrop-blur-sm p-4 rounded-2xl border border-charcoal/10 shadow-sm">
+          <p className="text-sm md:text-base text-charcoal/80 leading-relaxed mb-6 bg-white/70 backdrop-blur-md p-5 rounded-2xl border border-charcoal/10 shadow-xs">
             Tamu cukup menunjukkan QR Code di layar ponsel. Meja penerima tamu
             memindai secepat kilat dengan PWA offline-first tanpa takut sinyal
             hilang di dalam gedung.

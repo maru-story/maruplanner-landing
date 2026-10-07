@@ -35,15 +35,12 @@ export default function FAQ() {
 
   return (
     <section id="faq" className="py-24 bg-cream relative">
-      <div className="max-w-4xl mx-auto px-6">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-semibold uppercase tracking-widest text-copper mb-3 block">
-            Tanya Jawab
-          </span>
+      <div className="max-w-3xl mx-auto px-6">
+        <div className="max-w-2xl mx-auto text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-heading font-medium text-charcoal leading-tight mb-4">
             Pertanyaan yang Sering Diajukan
           </h2>
-          <p className="text-sm md:text-base text-charcoal/70 leading-relaxed">
+          <p className="text-base text-charcoal/80 leading-relaxed max-w-lg mx-auto">
             Semua hal penting yang perlu Anda ketahui sebelum menggunakan Maru
             Planner untuk hari bahagia Anda.
           </p>
@@ -59,18 +56,18 @@ export default function FAQ() {
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="w-full text-left p-6 flex items-center justify-between gap-4 font-heading font-medium text-base text-charcoal hover:text-copper transition-colors"
+                  className="w-full text-left p-6 flex items-center justify-between gap-4 font-heading font-medium text-base text-charcoal hover:text-[#965b2d] transition-colors"
                 >
-                  <span>{item.q}</span>
+                  <span className="leading-snug">{item.q}</span>
                   <ChevronDown
-                    className={`w-5 h-5 text-copper shrink-0 transition-transform duration-300 ${
+                    className={`w-5 h-5 text-[#965b2d] shrink-0 transition-transform duration-300 ${
                       isOpen ? "rotate-180" : ""
                     }`}
                   />
                 </button>
 
                 {isOpen && (
-                  <div className="px-6 pb-6 pt-2 text-sm text-charcoal/80 leading-relaxed border-t border-charcoal/5">
+                  <div className="px-6 pb-6 pt-2 text-sm text-charcoal/80 leading-relaxed border-t border-charcoal/5 max-w-[70ch]">
                     {item.a}
                   </div>
                 )}

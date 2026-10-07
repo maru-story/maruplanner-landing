@@ -9,11 +9,11 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-full bg-copper flex items-center justify-center text-white font-heading font-bold text-sm">
+              <div className="w-8 h-8 rounded-full bg-[#965b2d] flex items-center justify-center text-white font-heading font-bold text-sm">
                 M
               </div>
               <span className="font-heading font-medium text-2xl tracking-tight text-white">
-                Maru Planner<span className="text-copper">.</span>
+                Maru Planner<span className="text-copper-light">.</span>
               </span>
             </div>
             <p className="text-sm text-cream/70 max-w-sm leading-relaxed mb-6">
@@ -22,34 +22,34 @@ export default function Footer() {
               Code check-in 20fps offline-first di meja resepsi.
             </p>
             <div className="flex items-center gap-2 text-xs text-cream/50">
-              <MapPin className="w-3.5 h-3.5 text-copper" />
+              <MapPin className="w-3.5 h-3.5 text-copper-light" />
               <span>Indonesia • Melayani Acara Pernikahan Seluruh Nusantara</span>
             </div>
           </div>
 
           {/* Nav Links */}
           <div>
-            <h4 className="font-heading font-medium text-white text-base mb-4">
+            <h3 className="font-heading font-medium text-white text-base mb-4">
               Navigasi
-            </h4>
+            </h3>
             <ul className="space-y-2.5 text-sm text-cream/70">
               <li>
-                <a href="#solusi" className="hover:text-copper transition-colors">
+                <a href="#solusi" className="hover:text-copper-light transition-colors">
                   Keresahan & Solusi
                 </a>
               </li>
               <li>
-                <a href="#fitur" className="hover:text-copper transition-colors">
+                <a href="#fitur" className="hover:text-copper-light transition-colors">
                   Fitur Undangan
                 </a>
               </li>
               <li>
-                <a href="#untuk-wo" className="hover:text-copper transition-colors">
+                <a href="#untuk-wo" className="hover:text-copper-light transition-colors">
                   Fitur Wedding Organizer
                 </a>
               </li>
               <li>
-                <a href="#faq" className="hover:text-copper transition-colors">
+                <a href="#faq" className="hover:text-copper-light transition-colors">
                   Tanya Jawab (FAQ)
                 </a>
               </li>
@@ -58,7 +58,7 @@ export default function Footer() {
                   href="https://maruplanner.my.id/ama-jidengg?to=tria"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-copper transition-colors"
+                  className="hover:text-copper-light transition-colors"
                 >
                   Contoh Live Undangan
                 </a>
@@ -68,16 +68,16 @@ export default function Footer() {
 
           {/* Contact Box */}
           <div>
-            <h4 className="font-heading font-medium text-white text-base mb-4">
+            <h3 className="font-heading font-medium text-white text-base mb-4">
               Kontak Resmi
-            </h4>
+            </h3>
             <ul className="space-y-3 text-sm text-cream/70">
               <li>
                 <a
                   href="https://wa.me/6287825515689"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-white hover:text-copper transition-colors"
+                  className="flex items-center gap-2 text-white hover:text-copper-light transition-colors"
                 >
                   <MessageCircle className="w-4 h-4 text-emerald-400" />
                   <span>0878-2551-5689 (WhatsApp)</span>
@@ -86,9 +86,9 @@ export default function Footer() {
               <li>
                 <a
                   href="mailto:halo@maruplanner.my.id"
-                  className="flex items-center gap-2 hover:text-copper transition-colors"
+                  className="flex items-center gap-2 hover:text-copper-light transition-colors"
                 >
-                  <Mail className="w-4 h-4 text-copper" />
+                  <Mail className="w-4 h-4 text-copper-light" />
                   <span>halo@maruplanner.my.id</span>
                 </a>
               </li>
