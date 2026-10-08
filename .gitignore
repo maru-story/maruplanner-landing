@@ -4,3 +4,4 @@ out
 .DS_Store
 *.log
 raw-video.mp4
+.vercel
