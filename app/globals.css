@@ -1,28 +1,40 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* Maru Official Brand Palette */
+  --color-deep-green: #2f4034;
+  --color-deep-green-dark: #222f26;
+  --color-deep-green-light: #3e5344;
+  --color-gold: #c9a35c;
+  --color-gold-dark: #b08d48;
+  --color-gold-light: #dfc185;
+  --color-ivory: #f5f0e6;
+  --color-ivory-light: #fdfcf8;
   --color-sage: #a8bba3;
   --color-sage-dark: #81987c;
-  --color-cream: #f7f4ea;
-  --color-cream-light: #fdfcf8;
-  --color-copper: #b87c4c;
-  --color-copper-dark: #986036;
-  --color-copper-light: #d89e70;
-  --color-blush: #ebd9d1;
-  --color-charcoal: #2d3436;
-  --color-charcoal-light: #4a5457;
+  --color-sage-light: #c2d1be;
 
-  --font-heading: var(--font-playfair), serif;
-  --font-body: var(--font-poppins), sans-serif;
+  /* Aliases for backwards-compatibility / existing class mappings */
+  --color-charcoal: #2f4034;
+  --color-charcoal-light: #3e5344;
+  --color-cream: #f5f0e6;
+  --color-cream-light: #fdfcf8;
+  --color-copper: #c9a35c;
+  --color-copper-dark: #2f4034;
+  --color-copper-light: #dfc185;
+  --color-blush: #ebd9d1;
+
+  --font-heading: var(--font-fraunces), serif;
+  --font-body: var(--font-dm-sans), sans-serif;
 }
 
 html {
-  background-color: var(--color-cream);
-  color: var(--color-charcoal);
+  background-color: var(--color-ivory);
+  color: var(--color-deep-green);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  caret-color: var(--color-copper);
+  caret-color: var(--color-gold);
 }
 
 /* Editorial Typography & Text Wrapping Discipline */
@@ -35,24 +47,24 @@ p {
 }
 
 ::selection {
-  background-color: #ebd9d1;
-  color: #2d3436;
+  background-color: #c9a35c;
+  color: #ffffff;
 }
 
-/* Subtle Linen & Copper Scrollbar */
+/* Subtle Ivory & Deep Green / Gold Scrollbar */
 @media (min-width: 768px) {
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: #f7f4ea;
+    background: #f5f0e6;
   }
   ::-webkit-scrollbar-thumb {
-    background: #d8cbbd;
+    background: #a8bba3;
     border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #b87c4c;
+    background: #2f4034;
   }
 }

@@ -1,42 +1,62 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Poppins } from "next/font/google";
+import { Fraunces, DM_Sans } from "next/font/google";
 import "./globals.css";
 
-const playfair = Playfair_Display({
+const fraunces = Fraunces({
   subsets: ["latin"],
-  variable: "--font-playfair",
+  variable: "--font-fraunces",
   display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const poppins = Poppins({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-poppins",
+  variable: "--font-dm-sans",
   display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Maru Planner — Platform Undangan Digital & Manajemen Tamu Pernikahan",
+  metadataBase: new URL("https://maruplanner.my.id"),
+  title: "Maru — Digital Wedding Planner & Guest Management",
   description:
-    "Solusi menyeluruh pernikahan modern: Undangan digital estetik, sebar undangan WhatsApp satu klik, RSVP transparan, hingga QR Code check-in 20fps anti-antrean di hari-H.",
+    "Solusi menyeluruh pernikahan modern: Undangan digital berkelas, sebar undangan WhatsApp satu klik, RSVP transparan, hingga QR Code check-in 20fps anti-antrean di hari-H.",
   keywords: [
     "wedding invitation",
     "undangan digital",
     "wedding organizer",
     "qr check in pernikahan",
     "maru planner",
+    "maru",
     "rsvp digital",
   ],
-  authors: [{ name: "Maru Planner" }],
+  authors: [{ name: "Maru" }],
+  icons: {
+    icon: [
+      { url: "/brand/logo-system/maru-favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/logo-system/maru-favicon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/brand/logo-system/maru-favicon-48.png", sizes: "48x48", type: "image/png" },
+    ],
+    apple: [
+      { url: "/brand/logo-system/maru-favicon-180.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
   openGraph: {
-    title: "Maru Planner — Platform Undangan Digital & Manajemen Tamu Pernikahan",
+    title: "Maru — Digital Wedding Planner & Guest Management",
     description:
-      "Undangan digital estetik, pengiriman WhatsApp personal, dan QR check-in 20fps anti-antrean di hari-H.",
+      "Undangan digital berkelas, pengiriman WhatsApp personal, dan QR check-in 20fps anti-antrean di hari-H.",
     url: "https://maruplanner.my.id",
-    siteName: "Maru Planner",
+    siteName: "Maru",
     locale: "id_ID",
     type: "website",
+    images: [
+      {
+        url: "/brand/logo-system/maru-logo-primary.png",
+        width: 1024,
+        height: 1024,
+        alt: "Maru Logo",
+      },
+    ],
   },
 };
 
@@ -46,8 +66,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={`${playfair.variable} ${poppins.variable}`}>
-      <body className="antialiased bg-cream text-charcoal min-h-screen selection:bg-blush selection:text-charcoal">
+    <html lang="id" className={`${fraunces.variable} ${dmSans.variable}`}>
+      <body className="antialiased bg-ivory text-deep-green min-h-screen selection:bg-gold selection:text-white">
         {children}
       </body>
     </html>

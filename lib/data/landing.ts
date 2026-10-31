@@ -50,11 +50,11 @@ export interface FAQItem {
 }
 
 export const SITE_LINKS = {
-  name: "Maru Planner",
-  tagline: "Platform Undangan Digital & Manajemen Tamu Pernikahan",
+  name: "Maru",
+  tagline: "Digital Wedding Planner & Guest Management",
   domain: "maruplanner.my.id",
   whatsapp:
-    "https://wa.me/6287825515689?text=Halo%20Maru%20Planner,%20saya%20tertarik%20konsultasi%20layanan%20undangan%20digital",
+    "https://wa.me/6287825515689?text=Halo%20Maru,%20saya%20tertarik%20konsultasi%20layanan%20undangan%20digital",
   sampleInvitation: "https://maruplanner.my.id/ama-jidengg?to=tria",
   sampleCoupleNames: "Rahma & Zidane",
   sampleGuestName: "Tria",

@@ -16,10 +16,10 @@ export default function HeroCanvas() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-screen overflow-hidden bg-cream"
+      className="relative w-full h-screen overflow-hidden bg-ivory"
     >
       {/* Background Ambience */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cream-light via-cream to-[#f1ede0] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-ivory-light via-ivory to-[#ece6d9] pointer-events-none" />
 
       {/* HTML5 2D Canvas */}
       <canvas
@@ -30,7 +30,7 @@ export default function HeroCanvas() {
       />
 
       {/* Subtle vignettes for readability while preserving visual brilliance */}
-      <div className="absolute inset-0 bg-gradient-to-t from-cream/60 via-transparent to-cream/40 pointer-events-none z-10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ivory/70 via-transparent to-ivory/40 pointer-events-none z-10" />
 
       {/* Loading Progress Indicator */}
       <CanvasProgressBar
