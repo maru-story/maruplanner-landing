@@ -20,9 +20,39 @@ html {
   background-color: var(--color-cream);
   color: var(--color-charcoal);
   font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  caret-color: var(--color-copper);
+}
+
+/* Editorial Typography & Text Wrapping Discipline */
+h1, h2, h3, h4 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 ::selection {
   background-color: #ebd9d1;
   color: #2d3436;
+}
+
+/* Subtle Linen & Copper Scrollbar */
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f7f4ea;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #d8cbbd;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #b87c4c;
+  }
 }

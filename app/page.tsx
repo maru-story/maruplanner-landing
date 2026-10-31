@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "@/components/landing/navbar";
 import HeroCanvas from "@/components/scrollytelling/hero-canvas";
+import TechnicalMetrics from "@/components/landing/technical-metrics";
 import PainPoints from "@/components/landing/pain-points";
 import FeaturesHybrid from "@/components/landing/features-hybrid";
 import SampleInvitationCta from "@/components/landing/sample-invitation-cta";
@@ -15,6 +16,9 @@ export default function HomePage() {
 
       {/* Apple-Style Video Scrollytelling Hero (Pinned GSAP Canvas) */}
       <HeroCanvas />
+
+      {/* Technical Truth: System Capabilities & Performance */}
+      <TechnicalMetrics />
 
       {/* Pain Points vs Maru Solutions */}
       <PainPoints />
