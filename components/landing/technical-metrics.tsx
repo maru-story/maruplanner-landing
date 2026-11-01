@@ -4,41 +4,39 @@ import { TECHNICAL_METRICS } from "@/lib/data/landing";
 export default function TechnicalMetrics() {
   return (
     <section
+      id="spesifikasi"
       aria-label="Spesifikasi & Keandalan Sistem"
-      className="bg-ivory py-16 border-b border-deep-green/10 relative"
+      className="bg-ivory-light py-16 md:py-20 border-y border-deep-green/10 relative"
     >
       <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-          {TECHNICAL_METRICS.map((metric, idx) => {
-            const Icon = metric.icon;
-            return (
-              <div
-                key={idx}
-                className="bg-ivory-light rounded-2xl p-6 border border-deep-green/10 shadow-xs hover:border-gold/50 transition-[border-color,box-shadow,transform] duration-200 flex flex-col justify-between"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-ivory flex items-center justify-center text-gold border border-deep-green/10">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <span className="text-[11px] font-semibold tracking-wider uppercase text-deep-green/60">
-                    Spesifikasi
-                  </span>
-                </div>
+        <div className="text-center max-w-xl mx-auto mb-10">
+          <span className="text-xs font-semibold tracking-wider uppercase text-gold mb-2 block">
+            Spesifikasi
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-deep-green tracking-tight">
+            Performa & Keamanan
+          </h2>
+        </div>
 
-                <div>
-                  <div className="font-heading font-semibold text-3xl md:text-4xl text-deep-green tracking-tight tabular-nums mb-1">
-                    {metric.value}
-                  </div>
-                  <div className="text-xs font-semibold text-deep-green-light mb-1">
-                    {metric.label}
-                  </div>
-                  <p className="text-xs text-deep-green/75 leading-relaxed text-pretty">
-                    {metric.description}
-                  </p>
-                </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+          {TECHNICAL_METRICS.map((metric, idx) => (
+            <div
+              key={idx}
+              className="bg-ivory rounded-2xl p-6 border border-deep-green/10 shadow-xs hover:border-gold/50 transition-[border-color,box-shadow,transform] duration-150 flex flex-col justify-between"
+            >
+              <div className="font-heading font-bold text-3xl sm:text-4xl text-deep-green tracking-tight tabular-nums mb-2">
+                {metric.value}
               </div>
-            );
-          })}
+              <div>
+                <div className="text-xs font-semibold text-deep-green mb-0.5">
+                  {metric.label}
+                </div>
+                <p className="text-[11px] text-deep-green/70 leading-relaxed">
+                  {metric.desc}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

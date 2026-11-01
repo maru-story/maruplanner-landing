@@ -11,7 +11,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
+      setScrolled(window.scrollY > 30);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -34,19 +34,21 @@ export default function Navbar() {
           <Image
             src="/brand/logo-system/maru-logo-horizontal.png"
             alt="Maru"
-            width={140}
-            height={47}
-            className="h-9 w-auto object-contain"
+            width={130}
+            height={43}
+            className="h-8 sm:h-9 w-auto object-contain"
             priority
           />
         </a>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-deep-green/80">
+        <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-deep-green/80">
           {NAV_LINKS.map((link, idx) => (
             <a
               key={idx}
               href={link.href}
+              target={link.external ? "_blank" : undefined}
+              rel={link.external ? "noopener noreferrer" : undefined}
               className="hover:text-deep-green transition-[color] duration-150 focus-visible:ring-2 focus-visible:ring-gold focus-visible:outline-hidden rounded-md py-1"
             >
               {link.label}
@@ -54,13 +56,13 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* CTA Buttons */}
+        {/* Desktop CTA Buttons */}
         <div className="hidden md:flex items-center gap-3">
           <a
             href={SITE_LINKS.sampleInvitation}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs font-semibold text-deep-green hover:text-gold-dark px-3 py-2 flex items-center gap-1 transition-[color,transform] duration-150 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-gold focus-visible:outline-hidden rounded-full"
+            className="text-xs font-semibold text-deep-green hover:text-gold px-3 py-2 flex items-center gap-1 transition-[color,transform] duration-150 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-gold focus-visible:outline-hidden rounded-full"
           >
             <span>Live Demo</span>
             <ArrowUpRight className="w-3.5 h-3.5 text-gold" />
@@ -70,7 +72,7 @@ export default function Navbar() {
             href={SITE_LINKS.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-deep-green hover:bg-deep-green-dark text-white text-xs font-semibold transition-[transform,background-color,box-shadow] duration-150 active:scale-[0.98] shadow-xs hover:shadow-sm focus-visible:ring-2 focus-visible:ring-gold focus-visible:outline-hidden focus-visible:ring-offset-2 tabular-nums"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-deep-green hover:bg-deep-green-dark text-white text-xs font-semibold transition-[transform,background-color,box-shadow] duration-150 active:scale-[0.98] shadow-xs hover:shadow-sm focus-visible:ring-2 focus-visible:ring-gold focus-visible:outline-hidden tabular-nums"
           >
             <MessageCircle className="w-3.5 h-3.5 text-gold" />
             <span>{SITE_LINKS.phone}</span>
@@ -80,7 +82,7 @@ export default function Navbar() {
         {/* Mobile Hamburger (Min 44x44px accessible hit area) */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-deep-green hover:text-gold-dark transition-[color] duration-150 focus-visible:ring-2 focus-visible:ring-gold focus-visible:outline-hidden rounded-full"
+          className="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-deep-green hover:text-gold transition-[color] duration-150 focus-visible:ring-2 focus-visible:ring-gold focus-visible:outline-hidden rounded-full"
           aria-expanded={mobileMenuOpen}
           aria-controls="mobile-nav-menu"
           aria-label={mobileMenuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
@@ -99,8 +101,10 @@ export default function Navbar() {
             <a
               key={idx}
               href={link.href}
+              target={link.external ? "_blank" : undefined}
+              rel={link.external ? "noopener noreferrer" : undefined}
               onClick={() => setMobileMenuOpen(false)}
-              className="text-deep-green hover:text-gold-dark py-2 transition-[color] duration-150 min-h-[44px] flex items-center"
+              className="text-deep-green hover:text-gold py-2 transition-[color] duration-150 min-h-[44px] flex items-center"
             >
               {link.label}
             </a>

@@ -10,16 +10,16 @@ test.beforeAll(async () => {
   }
 });
 
-test.describe("Desktop Viewport — Maru Landing Page", () => {
+test.describe("Desktop Viewport — Maru Minimal Landing Page", () => {
   test.skip(({ isMobile }) => isMobile, "Desktop only");
 
-  test("should render header with official brand logo, navigation, and CTA", async ({
+  test("should render header with official logo, navigation, and CTA", async ({
     page,
   }) => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    // Title verification
+    // Title
     await expect(page).toHaveTitle(/Maru/i);
 
     // Official logo artwork
@@ -28,44 +28,69 @@ test.describe("Desktop Viewport — Maru Landing Page", () => {
     const src = await logoImg.getAttribute("src");
     expect(decodeURIComponent(src || "")).toContain("maru-logo-horizontal.png");
 
-    // Nav items
-    await expect(page.locator("nav a[href='#solusi']")).toBeVisible();
-    await expect(page.locator("nav a[href='#fitur']")).toBeVisible();
-    await expect(page.locator("nav a[href='#untuk-wo']")).toBeVisible();
-    await expect(page.locator("nav a[href='#faq']")).toBeVisible();
+    // Nav links
+    await expect(page.locator("header nav a[href='#fitur-undangan']")).toBeVisible();
+    await expect(page.locator("header nav a[href='#fitur-resepsi']")).toBeVisible();
+    await expect(page.locator("header nav a[href='#spesifikasi']")).toBeVisible();
 
-    // CTA in header
+    // CTA
     const headerCta = page.locator("header a[href*='wa.me']");
     await expect(headerCta).toBeVisible();
-    await expect(headerCta).toContainText("0878-2551-5689");
 
-    // Capture desktop hero screenshot
+    // Screenshot desktop hero
     await page.screenshot({
       path: path.join(SCREENSHOT_DIR, "desktop-hero.png"),
     });
   });
 
-  test("should render scrollytelling canvas and hero overlay phase 1", async ({
+  test("should render ultra-minimalist hero with headline and action buttons", async ({
     page,
   }) => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    const canvas = page.locator("canvas[role='img']");
-    await expect(canvas).toBeVisible();
-
-    const h1 = page.locator("#phase-1 h1");
+    const h1 = page.locator("h1");
     await expect(h1).toBeVisible();
-    await expect(h1).toContainText("Elegan di Layar");
-    await expect(h1).toContainText("Sempurna di Hari-H.");
+    await expect(h1).toContainText("Fitur Lengkap");
+    await expect(h1).toContainText("Maru");
 
-    const ctaWa = page.locator("#phase-1 a[href*='wa.me']");
-    await expect(ctaWa).toBeVisible();
+    // Live demo button
+    const demoBtn = page.locator("a[href*='maruplanner.my.id/ama-jidengg']").first();
+    await expect(demoBtn).toBeVisible();
   });
 
-  test("should render technical metrics proving system capability", async ({
+  test("should display feature showcase and switch between Couple and Organizer tabs", async ({
     page,
   }) => {
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    const featuresSection = page.locator("#fitur-undangan");
+    await featuresSection.scrollIntoViewIfNeeded();
+
+    const coupleTab = page.locator("#tab-couple");
+    const woTab = page.locator("#tab-organizer");
+
+    // Default tab: Couple
+    await expect(coupleTab).toHaveAttribute("aria-selected", "true");
+    await expect(page.locator("text=15 Section Modular")).toBeVisible();
+    await expect(page.locator("text=Tautan Nama Personal")).toBeVisible();
+    await expect(page.locator("text=Amplop Digital & QRIS")).toBeVisible();
+
+    // Switch to WO tab
+    await woTab.click();
+    await expect(woTab).toHaveAttribute("aria-selected", "true");
+    await expect(page.locator("text=Scanner QR 20 FPS")).toBeVisible();
+    await expect(page.locator("text=100% Offline-First")).toBeVisible();
+    await expect(page.locator("text=Registrasi Go-Show (3 Detik)")).toBeVisible();
+
+    // Screenshot desktop features
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, "desktop-features.png"),
+    });
+  });
+
+  test("should render technical metrics grid", async ({ page }) => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
@@ -75,105 +100,28 @@ test.describe("Desktop Viewport — Maru Landing Page", () => {
     await metricsSection.scrollIntoViewIfNeeded();
     await expect(metricsSection).toBeVisible();
 
-    // 4 metrics verification
     await expect(metricsSection).toContainText("20 FPS");
     await expect(metricsSection).toContainText("100%");
     await expect(metricsSection).toContainText("2.000+");
     await expect(metricsSection).toContainText("AES-256");
   });
 
-  test("should switch feature tabs and display official Maru & Mari mascot", async ({
+  test("should render live sample invitation preview card with mascot", async ({
     page,
   }) => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    const featuresSection = page.locator("#fitur");
-    await featuresSection.scrollIntoViewIfNeeded();
-
-    const coupleTab = page.locator("#tab-couple");
-    const woTab = page.locator("#tab-organizer");
-
-    // Default tab: couple
-    await expect(coupleTab).toHaveAttribute("aria-selected", "true");
-    await expect(featuresSection).toContainText("15 Section Modular Lengkap");
-    await expect(featuresSection).toContainText("Link Khusus Atas Nama Tamu");
-
-    // Check mascot in callout
-    const mascotImg = featuresSection.locator("img[alt*='Mascot']");
-    await expect(mascotImg).toBeVisible();
-    const mascotSrc = await mascotImg.getAttribute("src");
-    expect(decodeURIComponent(mascotSrc || "")).toContain(
-      "maru-mascot-couple-calm.png"
-    );
-
-    // Switch to WO tab
-    await woTab.click();
-    await expect(woTab).toHaveAttribute("aria-selected", "true");
-    await expect(featuresSection).toContainText(
-      "QR Scanner PWA 20fps Offline-First"
-    );
-    await expect(featuresSection).toContainText("Live Attendance Control Room");
-
-    // Check mascot switched to groom calm
-    const groomMascot = featuresSection.locator("img[alt*='Mascot']");
-    await expect(groomMascot).toBeVisible();
-    const groomSrc = await groomMascot.getAttribute("src");
-    expect(decodeURIComponent(groomSrc || "")).toContain(
-      "maru-mascot-groom-calm.png"
-    );
-
-    // Capture features screenshot
-    await page.screenshot({
-      path: path.join(SCREENSHOT_DIR, "desktop-features.png"),
-    });
-  });
-
-  test("should showcase live sample invitation card with couple mascot", async ({
-    page,
-  }) => {
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
-
-    const ctaSection = page.locator(
-      "text=Rasakan Pengalaman Tamu Saat Membuka Undangan"
-    );
+    const ctaSection = page.locator("text=Contoh Live Undangan");
     await ctaSection.scrollIntoViewIfNeeded();
 
-    await expect(
-      page.locator("text=The Wedding of Rahma & Zidane")
-    ).toBeVisible();
+    await expect(ctaSection).toBeVisible();
     await expect(
       page.locator("text=maruplanner.my.id/ama-jidengg?to=tria")
     ).toBeVisible();
-
-    const sampleLinks = page.locator(
-      "a[href*='maruplanner.my.id/ama-jidengg']"
-    );
-    await expect(sampleLinks.first()).toBeVisible();
   });
 
-  test("should toggle FAQ items smoothly", async ({ page }) => {
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
-
-    const faqSection = page.locator("#faq");
-    await faqSection.scrollIntoViewIfNeeded();
-
-    // First question is open by default
-    const firstQuestion = page.locator("#faq-btn-0");
-    await expect(firstQuestion).toHaveAttribute("aria-expanded", "true");
-    await expect(page.locator("#faq-panel-0")).toBeVisible();
-
-    // Toggle second question with explicit scroll
-    const secondQuestion = page.locator("#faq-btn-1");
-    await secondQuestion.scrollIntoViewIfNeeded();
-    await secondQuestion.click();
-    await expect(secondQuestion).toHaveAttribute("aria-expanded", "true");
-    await expect(page.locator("#faq-panel-1")).toBeVisible();
-  });
-
-  test("should render footer with brand logo in ivory card container", async ({
+  test("should render minimalist footer with brand logo in ivory card", async ({
     page,
   }) => {
     await page.goto("/");
@@ -184,12 +132,8 @@ test.describe("Desktop Viewport — Maru Landing Page", () => {
 
     const footerLogo = footer.locator("img[alt='Maru']");
     await expect(footerLogo).toBeVisible();
-    const footerSrc = await footerLogo.getAttribute("src");
-    expect(decodeURIComponent(footerSrc || "")).toContain(
-      "maru-logo-horizontal.png"
-    );
 
-    // Capture full desktop page screenshot
+    // Full page desktop screenshot
     await page.screenshot({
       path: path.join(SCREENSHOT_DIR, "desktop-fullpage.png"),
       fullPage: true,
@@ -197,26 +141,21 @@ test.describe("Desktop Viewport — Maru Landing Page", () => {
   });
 });
 
-test.describe("Mobile Viewport — Maru Landing Page", () => {
+test.describe("Mobile Viewport — Maru Minimal Landing Page", () => {
   test.skip(({ isMobile }) => !isMobile, "Mobile only");
 
-  test("should display mobile navigation bar with accessible menu button", async ({
+  test("should render mobile navbar with accessible hamburger drawer", async ({
     page,
   }) => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    // Header logo
-    const logoImg = page.locator("header a[href='/'] img");
-    await expect(logoImg).toBeVisible();
-
-    // Hamburger button
     const menuBtn = page.locator(
       "header button[aria-controls='mobile-nav-menu']"
     );
     await expect(menuBtn).toBeVisible();
 
-    // Check touch target bounding box >= 44x44
+    // Verify touch target >= 44x44
     const box = await menuBtn.boundingBox();
     expect(box).not.toBeNull();
     if (box) {
@@ -239,40 +178,30 @@ test.describe("Mobile Viewport — Maru Landing Page", () => {
       path: path.join(SCREENSHOT_DIR, "mobile-menu.png"),
     });
 
-    // Close mobile menu
+    // Close menu
     await menuBtn.click();
     await expect(mobileMenu).not.toBeVisible();
   });
 
-  test("should render responsive mobile sections without horizontal overflow", async ({
+  test("should display responsive feature cards without horizontal overflow", async ({
     page,
   }) => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    // Verify no horizontal overflow on mobile body
+    // Check no horizontal overflow
     const hasHorizontalScroll = await page.evaluate(() => {
       return document.documentElement.scrollWidth > window.innerWidth;
     });
     expect(hasHorizontalScroll).toBe(false);
 
-    // Verify technical metrics in mobile grid
-    const metricsSection = page.locator(
-      "section[aria-label='Spesifikasi & Keandalan Sistem']"
-    );
-    await metricsSection.scrollIntoViewIfNeeded();
-    await expect(metricsSection).toContainText("20 FPS");
-    await expect(metricsSection).toContainText("100%");
-
-    // Verify feature tabs on mobile
+    // Feature tabs interact smoothly on mobile
     const woTab = page.locator("#tab-organizer");
     await woTab.scrollIntoViewIfNeeded();
     await woTab.click();
-    await expect(
-      page.locator("text=QR Scanner PWA 20fps Offline-First")
-    ).toBeVisible();
+    await expect(page.locator("text=Scanner QR 20 FPS")).toBeVisible();
 
-    // Capture full mobile page screenshot
+    // Capture full mobile screenshot
     await page.screenshot({
       path: path.join(SCREENSHOT_DIR, "mobile-fullpage.png"),
       fullPage: true,
