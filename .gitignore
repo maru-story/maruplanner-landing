@@ -5,3 +5,6 @@ out
 *.log
 raw-video.mp4
 .vercel
+*.tsbuildinfo
+test-results/
+playwright-report/

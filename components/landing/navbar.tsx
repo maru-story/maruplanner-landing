@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { MessageCircle, Menu, X, ArrowUpRight } from "lucide-react";
+import { SITE_LINKS, NAV_LINKS } from "@/lib/data/landing";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -9,87 +11,81 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
+      setScrolled(window.scrollY > 30);
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,border-color,padding,box-shadow] duration-200 ease-out ${
         scrolled
-          ? "bg-cream/90 backdrop-blur-md border-b border-charcoal/10 py-3 shadow-xs"
+          ? "bg-ivory/95 backdrop-blur-md border-b border-deep-green/10 py-3 shadow-xs"
           : "bg-transparent py-5"
       }`}
     >
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
-        {/* Brand Logo */}
-        <a href="#" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-full bg-[#965b2d] flex items-center justify-center text-white font-heading font-bold text-sm shadow-sm group-hover:scale-105 transition-transform">
-            M
-          </div>
-          <span className="font-heading font-medium text-xl tracking-tight text-charcoal">
-            Maru Planner<span className="text-[#965b2d]">.</span>
-          </span>
+        {/* Brand Logo using Official Horizontal Lockup */}
+        <a
+          href="/"
+          className="flex items-center gap-2 group focus-visible:ring-2 focus-visible:ring-gold focus-visible:outline-hidden rounded-md transition-opacity hover:opacity-90"
+        >
+          <Image
+            src="/brand/logo-system/maru-logo-horizontal.png"
+            alt="Maru"
+            width={130}
+            height={43}
+            className="h-8 sm:h-9 w-auto object-contain"
+            priority
+          />
         </a>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-charcoal/80">
-          <a
-            href="#solusi"
-            className="hover:text-[#965b2d] transition-colors"
-          >
-            Keresahan & Solusi
-          </a>
-          <a
-            href="#fitur"
-            className="hover:text-[#965b2d] transition-colors"
-          >
-            Fitur Unggulan
-          </a>
-          <a
-            href="#untuk-wo"
-            className="hover:text-[#965b2d] transition-colors"
-          >
-            Untuk Wedding Organizer
-          </a>
-          <a
-            href="#faq"
-            className="hover:text-[#965b2d] transition-colors"
-          >
-            FAQ
-          </a>
+        <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-deep-green/80">
+          {NAV_LINKS.map((link, idx) => (
+            <a
+              key={idx}
+              href={link.href}
+              target={link.external ? "_blank" : undefined}
+              rel={link.external ? "noopener noreferrer" : undefined}
+              className="hover:text-deep-green transition-[color] duration-150 focus-visible:ring-2 focus-visible:ring-gold focus-visible:outline-hidden rounded-md py-1"
+            >
+              {link.label}
+            </a>
+          ))}
         </nav>
 
-        {/* CTA Button */}
+        {/* Desktop CTA Buttons */}
         <div className="hidden md:flex items-center gap-3">
           <a
-            href="https://maruplanner.my.id/ama-jidengg?to=tria"
+            href={SITE_LINKS.sampleInvitation}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs font-semibold text-charcoal hover:text-[#965b2d] px-3 py-2 flex items-center gap-1 transition-colors"
+            className="text-xs font-semibold text-deep-green hover:text-gold px-3 py-2 flex items-center gap-1 transition-[color,transform] duration-150 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-gold focus-visible:outline-hidden rounded-full"
           >
             <span>Live Demo</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
+            <ArrowUpRight className="w-3.5 h-3.5 text-gold" />
           </a>
 
           <a
-            href="https://wa.me/6287825515689?text=Halo%20Maru%20Planner,%20saya%20tertarik%20konsultasi%20layanan%20undangan%20digital"
+            href={SITE_LINKS.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#965b2d] hover:bg-[#7e4a24] text-white text-xs font-semibold transition-all shadow-sm hover:shadow-md"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-deep-green hover:bg-deep-green-dark text-white text-xs font-semibold transition-[transform,background-color,box-shadow] duration-150 active:scale-[0.98] shadow-xs hover:shadow-sm focus-visible:ring-2 focus-visible:ring-gold focus-visible:outline-hidden tabular-nums"
           >
-            <MessageCircle className="w-3.5 h-3.5" />
-            <span>0878-2551-5689</span>
+            <MessageCircle className="w-3.5 h-3.5 text-gold" />
+            <span>{SITE_LINKS.phone}</span>
           </a>
         </div>
 
-        {/* Mobile Hamburger */}
+        {/* Mobile Hamburger (Min 44x44px accessible hit area) */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 text-charcoal hover:text-[#965b2d] transition-colors"
-          aria-label="Toggle menu"
+          className="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-deep-green hover:text-gold transition-[color] duration-150 focus-visible:ring-2 focus-visible:ring-gold focus-visible:outline-hidden rounded-full"
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-nav-menu"
+          aria-label={mobileMenuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -97,52 +93,39 @@ export default function Navbar() {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-cream/98 backdrop-blur-xl border-b border-charcoal/10 px-6 py-6 flex flex-col gap-4 text-sm font-medium animate-in fade-in slide-in-from-top-2">
-          <a
-            href="#solusi"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-charcoal hover:text-[#965b2d] py-2"
-          >
-            Keresahan & Solusi
-          </a>
-          <a
-            href="#fitur"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-charcoal hover:text-[#965b2d] py-2"
-          >
-            Fitur Unggulan
-          </a>
-          <a
-            href="#untuk-wo"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-charcoal hover:text-[#965b2d] py-2"
-          >
-            Untuk Wedding Organizer
-          </a>
-          <a
-            href="#faq"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-charcoal hover:text-[#965b2d] py-2"
-          >
-            FAQ
-          </a>
-
-          <div className="pt-4 border-t border-charcoal/10 flex flex-col gap-3">
+        <div
+          id="mobile-nav-menu"
+          className="md:hidden bg-ivory/98 backdrop-blur-xl border-b border-deep-green/10 px-6 py-6 flex flex-col gap-4 text-sm font-medium animate-in fade-in slide-in-from-top-2"
+        >
+          {NAV_LINKS.map((link, idx) => (
             <a
-              href="https://maruplanner.my.id/ama-jidengg?to=tria"
+              key={idx}
+              href={link.href}
+              target={link.external ? "_blank" : undefined}
+              rel={link.external ? "noopener noreferrer" : undefined}
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-deep-green hover:text-gold py-2 transition-[color] duration-150 min-h-[44px] flex items-center"
+            >
+              {link.label}
+            </a>
+          ))}
+
+          <div className="pt-4 border-t border-deep-green/10 flex flex-col gap-3">
+            <a
+              href={SITE_LINKS.sampleInvitation}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-center py-2.5 rounded-full border border-charcoal/20 text-charcoal text-xs font-semibold"
+              className="text-center py-2.5 rounded-full border border-deep-green/20 text-deep-green text-xs font-semibold transition-[transform,background-color] duration-150 active:scale-[0.98] min-h-[44px] flex items-center justify-center"
             >
               Lihat Contoh Undangan
             </a>
             <a
-              href="https://wa.me/6287825515689?text=Halo%20Maru%20Planner,%20saya%20tertarik%20konsultasi"
+              href={SITE_LINKS.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-center py-2.5 rounded-full bg-[#965b2d] text-white text-xs font-semibold flex items-center justify-center gap-2"
+              className="text-center py-2.5 rounded-full bg-deep-green hover:bg-deep-green-dark text-white text-xs font-semibold flex items-center justify-center gap-2 transition-[transform,background-color] duration-150 active:scale-[0.98] min-h-[44px]"
             >
-              <MessageCircle className="w-4 h-4" />
+              <MessageCircle className="w-4 h-4 text-gold" />
               <span>Hubungi WhatsApp</span>
             </a>
           </div>

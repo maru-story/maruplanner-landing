@@ -1,107 +1,72 @@
 import React from "react";
-import { MessageCircle, Mail, MapPin, Heart } from "lucide-react";
+import Image from "next/image";
+import { MessageCircle, Mail, Heart } from "lucide-react";
+import { SITE_LINKS, NAV_LINKS } from "@/lib/data/landing";
 
 export default function Footer() {
   return (
-    <footer className="bg-charcoal text-cream py-16 border-t border-charcoal/20">
+    <footer className="bg-deep-green text-ivory py-14 border-t border-deep-green-dark">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-cream/10">
-          {/* Brand Info */}
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-full bg-[#965b2d] flex items-center justify-center text-white font-heading font-bold text-sm">
-                M
-              </div>
-              <span className="font-heading font-medium text-2xl tracking-tight text-white">
-                Maru Planner<span className="text-copper-light">.</span>
-              </span>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-10 border-b border-ivory/10">
+          {/* Logo on Ivory Card */}
+          <div className="flex flex-col gap-2">
+            <div className="inline-block bg-ivory px-3.5 py-2 rounded-2xl border border-gold/30 shadow-xs self-start">
+              <Image
+                src="/brand/logo-system/maru-logo-horizontal.png"
+                alt="Maru"
+                width={120}
+                height={40}
+                className="h-7 w-auto object-contain"
+              />
             </div>
-            <p className="text-sm text-cream/70 max-w-sm leading-relaxed mb-6">
-              Platform ekosistem digital pernikahan terpadu: dari studio
-              undangan sinematik, pengiriman pesan WhatsApp personal, hingga QR
-              Code check-in 20fps offline-first di meja resepsi.
+            <p className="text-xs text-ivory/70 max-w-xs mt-1">
+              Undangan Digital Modular & Manajemen Tamu Meja Resepsi.
             </p>
-            <div className="flex items-center gap-2 text-xs text-cream/50">
-              <MapPin className="w-3.5 h-3.5 text-copper-light" />
-              <span>Indonesia • Melayani Acara Pernikahan Seluruh Nusantara</span>
-            </div>
           </div>
 
           {/* Nav Links */}
-          <div>
-            <h3 className="font-heading font-medium text-white text-base mb-4">
-              Navigasi
-            </h3>
-            <ul className="space-y-2.5 text-sm text-cream/70">
-              <li>
-                <a href="#solusi" className="hover:text-copper-light transition-colors">
-                  Keresahan & Solusi
-                </a>
-              </li>
-              <li>
-                <a href="#fitur" className="hover:text-copper-light transition-colors">
-                  Fitur Undangan
-                </a>
-              </li>
-              <li>
-                <a href="#untuk-wo" className="hover:text-copper-light transition-colors">
-                  Fitur Wedding Organizer
-                </a>
-              </li>
-              <li>
-                <a href="#faq" className="hover:text-copper-light transition-colors">
-                  Tanya Jawab (FAQ)
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://maruplanner.my.id/ama-jidengg?to=tria"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-copper-light transition-colors"
-                >
-                  Contoh Live Undangan
-                </a>
-              </li>
-            </ul>
-          </div>
+          <nav className="flex flex-wrap items-center gap-6 text-xs text-ivory/80 font-medium">
+            {NAV_LINKS.map((nav, idx) => (
+              <a
+                key={idx}
+                href={nav.href}
+                target={nav.external ? "_blank" : undefined}
+                rel={nav.external ? "noopener noreferrer" : undefined}
+                className="hover:text-gold transition-[color] duration-150"
+              >
+                {nav.label}
+              </a>
+            ))}
+          </nav>
 
-          {/* Contact Box */}
-          <div>
-            <h3 className="font-heading font-medium text-white text-base mb-4">
-              Kontak Resmi
-            </h3>
-            <ul className="space-y-3 text-sm text-cream/70">
-              <li>
-                <a
-                  href="https://wa.me/6287825515689"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-white hover:text-copper-light transition-colors"
-                >
-                  <MessageCircle className="w-4 h-4 text-emerald-400" />
-                  <span>0878-2551-5689 (WhatsApp)</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="mailto:halo@maruplanner.my.id"
-                  className="flex items-center gap-2 hover:text-copper-light transition-colors"
-                >
-                  <Mail className="w-4 h-4 text-copper-light" />
-                  <span>halo@maruplanner.my.id</span>
-                </a>
-              </li>
-            </ul>
+          {/* Quick Contacts */}
+          <div className="flex items-center gap-4 text-xs">
+            <a
+              href={SITE_LINKS.whatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-ivory hover:text-gold transition-[color] duration-150 tabular-nums"
+            >
+              <MessageCircle className="w-3.5 h-3.5 text-gold" />
+              <span>{SITE_LINKS.phone}</span>
+            </a>
+            <span className="text-ivory/20">•</span>
+            <a
+              href={`mailto:${SITE_LINKS.email}`}
+              className="inline-flex items-center gap-1.5 text-ivory hover:text-gold transition-[color] duration-150"
+            >
+              <Mail className="w-3.5 h-3.5 text-gold" />
+              <span>{SITE_LINKS.email}</span>
+            </a>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-cream/50">
-          <p>© {new Date().getFullYear()} Maru Planner. Hak Cipta Dilindungi Undang-Undang.</p>
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-ivory/60">
+          <p>© {new Date().getFullYear()} Maru. Hak Cipta Dilindungi.</p>
           <p className="flex items-center gap-1">
-            <span>Dibuat dengan dedikasi untuk hari bahagia Anda</span>
-            <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400 inline" />
+            <span>Didedikasikan untuk kelancaran hari bahagia</span>
+            <Heart className="w-3 h-3 text-gold fill-gold inline" />
           </p>
         </div>
       </div>

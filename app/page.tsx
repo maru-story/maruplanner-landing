@@ -1,34 +1,30 @@
 import React from "react";
 import Navbar from "@/components/landing/navbar";
-import HeroCanvas from "@/components/scrollytelling/hero-canvas";
-import PainPoints from "@/components/landing/pain-points";
-import FeaturesHybrid from "@/components/landing/features-hybrid";
+import HeroMinimal from "@/components/landing/hero-minimal";
+import FeaturesShowcase from "@/components/landing/features-showcase";
+import TechnicalMetrics from "@/components/landing/technical-metrics";
 import SampleInvitationCta from "@/components/landing/sample-invitation-cta";
-import FAQ from "@/components/landing/faq";
 import Footer from "@/components/landing/footer";
 
 export default function HomePage() {
   return (
-    <main className="relative min-h-screen bg-cream selection:bg-blush selection:text-charcoal">
-      {/* Sticky / Scrolled Navbar */}
+    <main className="relative min-h-screen bg-ivory text-deep-green selection:bg-gold selection:text-white">
+      {/* Header Navigation */}
       <Navbar />
 
-      {/* Apple-Style Video Scrollytelling Hero (Pinned GSAP Canvas) */}
-      <HeroCanvas />
+      {/* Hero: Crisp, Ultra-Minimalist Feature-First Headline */}
+      <HeroMinimal />
 
-      {/* Pain Points vs Maru Solutions */}
-      <PainPoints />
+      {/* Primary Feature Index (Pengantin & Wedding Organizer) */}
+      <FeaturesShowcase />
 
-      {/* Dual Pillars: Pasangan Pengantin & Wedding Organizer */}
-      <FeaturesHybrid />
+      {/* Technical Specifications (20 FPS, 100% Offline, 2000+ Tamu, AES-256) */}
+      <TechnicalMetrics />
 
-      {/* Live Sample Invitation Showcase */}
+      {/* Live Sample Invitation Demo Showcase */}
       <SampleInvitationCta />
 
-      {/* Frequently Asked Questions */}
-      <FAQ />
-
-      {/* Footer & Contacts */}
+      {/* Minimal Footer */}
       <Footer />
     </main>
   );
